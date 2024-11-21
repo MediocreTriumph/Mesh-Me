@@ -1,0 +1,4 @@
+tkinter
+ipaddress
+typing
+pathlib
