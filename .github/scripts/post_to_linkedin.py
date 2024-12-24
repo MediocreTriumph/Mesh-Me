@@ -1,7 +1,6 @@
-# post_to_linkedin.py
 import os
 import json
-from linkedin import linkedin
+from linkedin_api import Linkedin
 from github import Github
 from datetime import datetime
 
@@ -23,7 +22,7 @@ def format_release_message(release):
 
 {release['body'][:200]}... 
 
-Check out the full release notes and give it a try:
+Check out the full release notes:
 {release['html_url']}
 
 #github #development #coding #newrelease"""
@@ -39,21 +38,10 @@ Repository: {os.getenv('GITHUB_REPOSITORY')}
 
 def post_to_linkedin(message):
     """Post the message to LinkedIn"""
-    authentication = linkedin.LinkedInAuthentication(
-        os.getenv('LINKEDIN_CLIENT_ID'),
-        os.getenv('LINKEDIN_CLIENT_SECRET'),
-        None,
-        linkedin.PERMISSIONS.enums.values()
-    )
+    api = Linkedin(os.getenv('LINKEDIN_ACCESS_TOKEN'))
     
-    authentication.token = os.getenv('LINKEDIN_ACCESS_TOKEN')
-    application = linkedin.LinkedInApplication(authentication)
-    
-    # Create the post
-    application.submit_share(
-        comment=message,
-        visibility_code='anyone'  # Public visibility
-    )
+    # Create the post using LinkedIn API v2
+    api.post(message)
 
 def main():
     try:
