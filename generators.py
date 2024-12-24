@@ -1,3 +1,5 @@
+# generators.py
+
 from models import Device, InternetRouter
 from config import Config
 from ipaddress import IPv4Network
