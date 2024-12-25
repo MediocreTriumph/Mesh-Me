@@ -1,5 +1,3 @@
-# utils.py
-
 from typing import Set
 import csv
 from pathlib import Path
