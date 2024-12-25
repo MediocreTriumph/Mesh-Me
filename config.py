@@ -1,4 +1,5 @@
 # config.py
+
 class Config:
     PRIMARY_COMMUNITY = "65000:100"
     BACKUP_COMMUNITY = "65000:200"
