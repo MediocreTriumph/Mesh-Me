@@ -34,7 +34,7 @@ Repository: {os.getenv('GITHUB_REPOSITORY')}
 
 def post_to_linkedin(message):
     access_token = os.getenv('LINKEDIN_ACCESS_TOKEN')
-    api_url = 'https://api.linkedin.com/v2/ugcPosts'
+    api_url = 'https://api.linkedin.com/v2/shares'
     
     headers = {
         'Authorization': f'Bearer {access_token}',
@@ -43,22 +43,31 @@ def post_to_linkedin(message):
     }
     
     post_data = {
-        "author": "urn:li:person:ACoAAFWYU3QBnS7UtzlNVc14kjrcRD6pqJ9XyCI",  # Replace with your LinkedIn ID
-        "lifecycleState": "PUBLISHED",
-        "specificContent": {
-            "com.linkedin.ugc.ShareContent": {
-                "shareCommentary": {
-                    "text": message
-                },
-                "shareMediaCategory": "NONE"
+        "content": {
+            "contentEntities": [
+                {
+                    "entityLocation": os.getenv('GITHUB_SERVER_URL', 'https://github.com') + "/" + os.getenv('GITHUB_REPOSITORY', ''),
+                    "thumbnails": [{"resolvedUrl": ""}],
+                    "title": "GitHub Update"
+                }
+            ],
+            "title": "GitHub Update"
+        },
+        "distribution": {
+            "linkedInDistributionTarget": {
+                "visibleToGuest": True
             }
         },
-        "visibility": {
-            "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+        "owner": f"urn:li:person:{os.getenv('LINKEDIN_USER_ID')}",
+        "subject": "GitHub Repository Update",
+        "text": {
+            "text": message
         }
     }
     
     response = requests.post(api_url, headers=headers, json=post_data)
+    if response.status_code != 201:
+        print(f"Response: {response.text}")
     response.raise_for_status()
 
 def main():
