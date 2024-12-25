@@ -58,16 +58,16 @@ def post_to_linkedin(message):
                 "visibleToGuest": True
             }
         },
-        "owner": f"urn:li:person:{os.getenv('LINKEDIN_USER_ID')}",
+        "owner": f"urn:li:organization:{os.getenv('LINKEDIN_ORG_ID')}",
         "subject": "GitHub Repository Update",
         "text": {
             "text": message
         }
     }
     
+    print(f"Sending request to LinkedIn API: {json.dumps(post_data, indent=2)}")
     response = requests.post(api_url, headers=headers, json=post_data)
-    if response.status_code != 201:
-        print(f"Response: {response.text}")
+    print(f"Response: {response.text}")
     response.raise_for_status()
 
 def main():
