@@ -1,5 +1,3 @@
-# gui.py
-
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from pathlib import Path
