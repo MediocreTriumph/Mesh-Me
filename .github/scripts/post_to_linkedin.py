@@ -34,35 +34,26 @@ Repository: {os.getenv('GITHUB_REPOSITORY')}
 
 def post_to_linkedin(message):
     access_token = os.getenv('LINKEDIN_ACCESS_TOKEN')
-    api_url = 'https://api.linkedin.com/v2/shares'
+    author_id = os.getenv('LINKEDIN_USER_ID')
+    api_url = f'https://api.linkedin.com/rest/posts'
     
     headers = {
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json',
-        'X-Restli-Protocol-Version': '2.0.0'
+        'LinkedIn-Version': '202304'
     }
     
     post_data = {
-        "content": {
-            "contentEntities": [
-                {
-                    "entityLocation": os.getenv('GITHUB_SERVER_URL', 'https://github.com') + "/" + os.getenv('GITHUB_REPOSITORY', ''),
-                    "thumbnails": [{"resolvedUrl": ""}],
-                    "title": "GitHub Update"
-                }
-            ],
-            "title": "GitHub Update"
-        },
+        "author": f"urn:li:person:{author_id}",
+        "commentary": message,
+        "visibility": "PUBLIC",
         "distribution": {
-            "linkedInDistributionTarget": {
-                "visibleToGuest": True
-            }
+            "feedDistribution": "MAIN_FEED",
+            "targetEntities": [],
+            "thirdPartyDistributionChannels": []
         },
-        "owner": f"urn:li:organization:{os.getenv('LINKEDIN_ORG_ID')}",
-        "subject": "GitHub Repository Update",
-        "text": {
-            "text": message
-        }
+        "lifecycleState": "PUBLISHED",
+        "isReshareDisabledByAuthor": False
     }
     
     print(f"Sending request to LinkedIn API: {json.dumps(post_data, indent=2)}")
